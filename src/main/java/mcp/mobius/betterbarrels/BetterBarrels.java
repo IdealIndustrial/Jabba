@@ -88,8 +88,7 @@ public class BetterBarrels {
 
 	public static boolean exposeFullStorageSize = false;
 	public static boolean reverseBehaviourClickLeft = false;
-	public static boolean allowOreDictUnification = true;
-	
+	public static boolean allowOreDictUnification = true;	
 
 	public static boolean renderStackAndText = false;
 	public static float renderDistance = 16F;	
