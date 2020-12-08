@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import ibxm.Player;
 import mcp.mobius.betterbarrels.BetterBarrels;
 import mcp.mobius.betterbarrels.Utils;
 import mcp.mobius.betterbarrels.common.JabbaCreativeTab;
@@ -35,7 +34,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameData;
-import scala.Int;
 
 public class ItemBarrelMover extends Item {
 	protected IIcon text_empty  = null;
@@ -58,8 +56,6 @@ public class ItemBarrelMover extends Item {
 		classExtensionsNames.add("buildcraft.energy.TileEngine");
 		classExtensionsNames.add("buildcraft.factory.TileTank");
 
-		//classExtensionsNames.add("ic2.api.energy.tile.IEnergySink");
-		//classExtensionsNames.add("ic2.api.energy.tile.IEnergySource");
 		classExtensionsNames.add("ic2.api.tile.IWrenchable");
 
 		classExtensionsNames.add("mods.railcraft.common.blocks.machine.beta.TileEngine");
@@ -73,8 +69,6 @@ public class ItemBarrelMover extends Item {
 
 		classExtensionsNames.add("thermalexpansion.block.engine.TileEngineRoot");
 		classExtensionsNames.add("thermalexpansion.block.machine.TileMachineRoot");
-
-		//classExtensionsNames.add("factorization.common.TileEntityBarrel");
 
 		classExtensionsNames.add("dmillerw.cchests.block.tile.TileChest");
 
@@ -91,7 +85,6 @@ public class ItemBarrelMover extends Item {
 		classExtensionsNames.add("jds.bibliocraft.tileentities.TileEntityWeaponRack");
 		classExtensionsNames.add("jds.bibliocraft.tileentities.TileEntityGenericShelf");
 		classExtensionsNames.add("jds.bibliocraft.tileentities.TileEntityArmorStand");
-		//classExtensionsNames.add("jds.bibliocraft.tileentities.TileEntityWeaponCase");
 
 		classExtensionsNames.add("com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityDrawers");
 		classExtensionsNames.add("com.jaquadro.minecraft.storagedrawers.block.tile.TileEntityCompDrawers");
@@ -118,9 +111,9 @@ public class ItemBarrelMover extends Item {
 		this.setNoRepair();
 	}
 
-	public Integer calculateExcessDistance(Integer allowedDistance, Integer[] xs, Integer[] zs){
-		Integer deltaX = Math.abs(xs[0] - xs[1]);
-		Integer deltaZ = Math.abs(zs[0] - zs[1]);
+	public Integer calculateExcessDistance(Integer allowedDistance, int x1, int x2, int z1, int z2){
+		Integer deltaX = Math.abs(x1 - x2);
+		Integer deltaZ = Math.abs(z1 - z2);
 		Integer maxDelta = deltaX > deltaZ ? deltaX : deltaZ;
 		return maxDelta - allowedDistance;
 	};
@@ -136,8 +129,8 @@ public class ItemBarrelMover extends Item {
 			list.add(takenFromPlace);
 			Integer excessDistance = calculateExcessDistance(
 					BetterBarrels.allowedMoveChestDistance,
-					new Integer[]{(int)player.posX, nbtContainerStack.getInteger("posX")},
-					new Integer[]{(int)player.posZ, nbtContainerStack.getInteger("posZ")}
+					(int)player.posX, nbtContainerStack.getInteger("posX"),
+					(int)player.posZ, nbtContainerStack.getInteger("posZ")
 			);
 			if (excessDistance > 0) {
 				list.add("\u00A7c" + StatCollector.translateToLocal("item.dolly.normal.excess_distance") + " " + excessDistance + "\u00A7r");
@@ -215,8 +208,8 @@ public class ItemBarrelMover extends Item {
 		if (BetterBarrels.allowedMoveChestDistance > 0){
 			Integer excessDistance = calculateExcessDistance(
 					BetterBarrels.allowedMoveChestDistance,
-					new Integer[]{(int)x, nbtContainerStack.getInteger("posX")},
-					new Integer[]{(int)z, nbtContainerStack.getInteger("posZ")}
+					(int)x, nbtContainerStack.getInteger("posX"),
+					(int)z, nbtContainerStack.getInteger("posZ")
 			);
 			if (excessDistance > 0) {
 				player.addChatMessage(
