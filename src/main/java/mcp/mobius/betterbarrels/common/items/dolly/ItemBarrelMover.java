@@ -208,8 +208,8 @@ public class ItemBarrelMover extends Item {
 		if (BetterBarrels.allowedMoveChestDistance > 0){
 			Integer excessDistance = calculateExcessDistance(
 					BetterBarrels.allowedMoveChestDistance,
-					(int)x, nbtContainerStack.getInteger("posX"),
-					(int)z, nbtContainerStack.getInteger("posZ")
+					x, nbtContainerStack.getInteger("posX"),
+					z, nbtContainerStack.getInteger("posZ")
 			);
 			if (excessDistance > 0) {
 				player.addChatMessage(
