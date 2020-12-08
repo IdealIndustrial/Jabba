@@ -34,6 +34,11 @@ item.hammer.creative.name=Бочкообразный молот (Творчес�
 
 item.dolly.normal.empty.name=Тележка
 item.dolly.normal.full.name=Тележка (Полная)
+item.dolly.normal.allowed_move_distance=Допустимое расстояние переноски
+item.dolly.normal.taken_from=Взято из места (x / z)
+item.dolly.normal.excess_distance=Расстояние по блокам превышено на
+item.dolly.normal.excess_distance_message=Нельзя переместить так далеко. Превышение по блоком на
+
 item.dolly.diamond.empty.name=Алмазная тележка
 item.dolly.diamond.full.name=Алмазная тележка (Полная)
 item.fork.name=Пространственный камертон

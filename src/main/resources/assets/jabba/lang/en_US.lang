@@ -34,6 +34,11 @@ item.hammer.creative.name=Barrel Hammer(Creative)
 
 item.dolly.normal.empty.name=Dolly
 item.dolly.normal.full.name=Dolly (Full)
+item.dolly.normal.allowed_move_distance=Allowed to move distance in blocks is
+item.dolly.normal.taken_from=Taken from place (x / z)
+item.dolly.normal.excess_distance=Distance in blocks exceeded by
+item.dolly.normal.excess_distance_message=You can't move your box so far. Excess distance in blocks by
+
 item.dolly.diamond.empty.name=Diamond dolly
 item.dolly.diamond.full.name=Diamond dolly (Full)
 item.fork.name=B-Space tuning fork

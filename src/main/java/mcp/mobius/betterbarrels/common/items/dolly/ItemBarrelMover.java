@@ -5,7 +5,9 @@ import java.io.DataOutputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import ibxm.Player;
 import mcp.mobius.betterbarrels.BetterBarrels;
 import mcp.mobius.betterbarrels.Utils;
 import mcp.mobius.betterbarrels.common.JabbaCreativeTab;
@@ -25,12 +27,15 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityMobSpawner;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameData;
+import scala.Int;
 
 public class ItemBarrelMover extends Item {
 	protected IIcon text_empty  = null;
@@ -109,10 +114,35 @@ public class ItemBarrelMover extends Item {
 	public ItemBarrelMover() {
 		super();
 		this.setMaxStackSize(1);
-		//this.setHasSubtypes(true);
-		//this.setMaxDamage(0);
 		this.setCreativeTab(JabbaCreativeTab.tab);
 		this.setNoRepair();
+	}
+
+	public Integer calculateExcessDistance(Integer allowedDistance, Integer[] xs, Integer[] zs){
+		Integer deltaX = Math.abs(xs[0] - xs[1]);
+		Integer deltaZ = Math.abs(zs[0] - zs[1]);
+		Integer maxDelta = deltaX > deltaZ ? deltaX : deltaZ;
+		return maxDelta - allowedDistance;
+	};
+
+	@Override
+	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean show) {
+		super.addInformation(stack, player, list, show);
+		if (BetterBarrels.allowedMoveChestDistance > 0 && stack.hasTagCompound() && stack.getTagCompound().hasKey("Container")) {
+			list.add(StatCollector.translateToLocal("item.dolly.normal.allowed_move_distance") + ": " + BetterBarrels.allowedMoveChestDistance);
+			NBTTagCompound nbtContainerStack = stack.getTagCompound().getCompoundTag("Container");
+			String takenFromPlace = StatCollector.translateToLocal("item.dolly.normal.taken_from") + ": ";
+			takenFromPlace += nbtContainerStack.getInteger("posX") + " / " + nbtContainerStack.getInteger("posZ");
+			list.add(takenFromPlace);
+			Integer excessDistance = calculateExcessDistance(
+					BetterBarrels.allowedMoveChestDistance,
+					new Integer[]{(int)player.posX, nbtContainerStack.getInteger("posX")},
+					new Integer[]{(int)player.posZ, nbtContainerStack.getInteger("posZ")}
+			);
+			if (excessDistance > 0) {
+				list.add("\u00A7c" + StatCollector.translateToLocal("item.dolly.normal.excess_distance") + " " + excessDistance + "\u00A7r");
+			}
+		}
 	}
 
 	@Override
@@ -181,7 +211,23 @@ public class ItemBarrelMover extends Item {
 		}
 		int blockMeta      = nbtContainerStack.getInteger("Meta");
 		String TEClassName = nbtContainerStack.getString("TEClass");
-		NBTTagCompound nbtContainer = nbtStack.getCompoundTag("Container").getCompoundTag("NBT");
+		NBTTagCompound nbtContainer = nbtContainerStack.getCompoundTag("NBT");
+		if (BetterBarrels.allowedMoveChestDistance > 0){
+			Integer excessDistance = calculateExcessDistance(
+					BetterBarrels.allowedMoveChestDistance,
+					new Integer[]{(int)x, nbtContainerStack.getInteger("posX")},
+					new Integer[]{(int)z, nbtContainerStack.getInteger("posZ")}
+			);
+			if (excessDistance > 0) {
+				player.addChatMessage(
+					new ChatComponentText(
+						StatCollector.translateToLocal("item.dolly.normal.excess_distance_message") +
+							": " + excessDistance
+					)
+				);
+				return false;
+			}
+		}
 
 		ForgeDirection targSide = ForgeDirection.getOrientation(side);
 		//if (world.isBlockSolidOnSide(x, y, z, targSide)) {return false;}
@@ -519,6 +565,9 @@ public class ItemBarrelMover extends Item {
 		nbtTarget.setInteger("Meta",      blockMeta);
 		nbtTarget.setString("TEClass",    containerTE.getClass().getName());
 		nbtTarget.setBoolean("isSpawner", containerTE instanceof TileEntityMobSpawner);
+		nbtTarget.setInteger("posX", x);
+		nbtTarget.setInteger("posY", y);
+		nbtTarget.setInteger("posZ", z);
 		nbtTarget.setTag("NBT",   nbtContainer); //TODO: Check this, seems the nbt classes were streamlined somewhat
 
 		if (tagCompoundWrite != null) {
