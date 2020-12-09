@@ -111,10 +111,10 @@ public class ItemBarrelMover extends Item {
 		this.setNoRepair();
 	}
 
-	public Integer calculateExcessDistance(Integer allowedDistance, int x1, int x2, int z1, int z2){
-		Integer deltaX = Math.abs(x1 - x2);
-		Integer deltaZ = Math.abs(z1 - z2);
-		Integer maxDelta = deltaX > deltaZ ? deltaX : deltaZ;
+	public int calculateExcessDistance(int allowedDistance, int x1, int x2, int z1, int z2){
+		int deltaX = Math.abs(x1 - x2);
+		int deltaZ = Math.abs(z1 - z2);
+		int maxDelta = deltaX > deltaZ ? deltaX : deltaZ;
 		return maxDelta - allowedDistance;
 	};
 
@@ -127,7 +127,7 @@ public class ItemBarrelMover extends Item {
 			String takenFromPlace = StatCollector.translateToLocal("item.dolly.normal.taken_from") + ": ";
 			takenFromPlace += nbtContainerStack.getInteger("posX") + " / " + nbtContainerStack.getInteger("posZ");
 			list.add(takenFromPlace);
-			Integer excessDistance = calculateExcessDistance(
+			int excessDistance = calculateExcessDistance(
 					BetterBarrels.allowedMoveChestDistance,
 					(int)player.posX, nbtContainerStack.getInteger("posX"),
 					(int)player.posZ, nbtContainerStack.getInteger("posZ")
@@ -206,7 +206,7 @@ public class ItemBarrelMover extends Item {
 		String TEClassName = nbtContainerStack.getString("TEClass");
 		NBTTagCompound nbtContainer = nbtContainerStack.getCompoundTag("NBT");
 		if (BetterBarrels.allowedMoveChestDistance > 0){
-			Integer excessDistance = calculateExcessDistance(
+			int excessDistance = calculateExcessDistance(
 					BetterBarrels.allowedMoveChestDistance,
 					x, nbtContainerStack.getInteger("posX"),
 					z, nbtContainerStack.getInteger("posZ")
