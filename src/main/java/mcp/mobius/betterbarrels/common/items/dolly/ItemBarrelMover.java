@@ -64,6 +64,7 @@ public class ItemBarrelMover extends Item {
 		classExtensionsNames.add("forestry.apiculture.tiles.TileApiaristChest");
 		classExtensionsNames.add("forestry.arboriculture.tiles.TileArboristChest");
 		classExtensionsNames.add("forestry.lepidopterology.tiles.TileLepidopteristChest");
+		classExtensionsNames.add("forestry.factory.tiles.TileWorktable");
 
 		classExtensionsNames.add("bluedart.tile.TileEntityForceEngine");
 
@@ -273,10 +274,11 @@ public class ItemBarrelMover extends Item {
 		if (TEClassName.contains("forestry.energy.gadgets") && nbtContainer.hasKey("Orientation"))
 			nbtContainer.setInteger("Orientation", 1);
 		
-		/* Forestry chests orientation correction */
+		/* Forestry chests and worktable orientation correction */
 		if ((TEClassName.contains("forestry.apiculture.tiles.TileApiaristChest") 
 				|| TEClassName.contains("forestry.arboriculture.tiles.TileArboristChest")
-				|| TEClassName.contains("forestry.lepidopterology.tiles.TileLepidopteristChest"))
+				|| TEClassName.contains("forestry.lepidopterology.tiles.TileLepidopteristChest")
+				|| TEClassName.contains("forestry.factory.tiles.TileWorktable"))
 				&& nbtContainer.hasKey("Orientation"))
 			nbtContainer.setInteger("Orientation", this.getBarrelOrientationOnPlacement(player).ordinal());
 
@@ -488,6 +490,7 @@ public class ItemBarrelMover extends Item {
 		if (te instanceof TileEntityChest)
 			return true;
 		for (Class c : classExtensions) {
+			System.out.printf("%s \n", te);
 			if (c!=null && c.isInstance(te))
 				return true;
 		}
