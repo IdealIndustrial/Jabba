@@ -490,7 +490,6 @@ public class ItemBarrelMover extends Item {
 		if (te instanceof TileEntityChest)
 			return true;
 		for (Class c : classExtensions) {
-			System.out.printf("%s \n", te);
 			if (c!=null && c.isInstance(te))
 				return true;
 		}
