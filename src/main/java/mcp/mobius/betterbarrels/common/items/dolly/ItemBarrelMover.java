@@ -13,10 +13,12 @@ import mcp.mobius.betterbarrels.common.JabbaCreativeTab;
 import mcp.mobius.betterbarrels.common.LocalizedChat;
 import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
 import mcp.mobius.betterbarrels.network.BarrelPacketHandler;
+import mcp.mobius.betterbarrels.network.Message0x07ForceRender;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -464,7 +466,9 @@ public class ItemBarrelMover extends Item {
 		stack.getTagCompound().removeTag("Container");
 
 		world.markBlockForUpdate(targX, targY, targZ);
-
+		if (TEClassName.contains("forestry.factory.tiles.TileWorktable") && player instanceof EntityPlayerMP){
+			BarrelPacketHandler.INSTANCE.sendTo(new Message0x07ForceRender(x,y,z),(EntityPlayerMP)player);
+		}
 		return true;
 	}
 

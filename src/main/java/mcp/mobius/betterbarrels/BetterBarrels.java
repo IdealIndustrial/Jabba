@@ -2,6 +2,7 @@ package mcp.mobius.betterbarrels;
 
 import java.util.Arrays;
 
+import mcp.mobius.betterbarrels.client.DelayedUpdates;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -94,7 +95,7 @@ public class BetterBarrels {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		config = new Configuration(event.getSuggestedConfigurationFile());
-
+		new DelayedUpdates();
 		try {
 			config.load();
 
