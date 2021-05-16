@@ -3,6 +3,7 @@ package mcp.mobius.betterbarrels.network;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import mcp.mobius.betterbarrels.client.DelayedUpdates;
 import net.minecraft.client.Minecraft;
 
 public class Message0x07ForceRender extends SimpleChannelInboundHandler<Message0x07ForceRender> implements IBarrelMessage {
@@ -31,6 +32,6 @@ public class Message0x07ForceRender extends SimpleChannelInboundHandler<Message0
 
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, Message0x07ForceRender msg) throws Exception {
-		Minecraft.getMinecraft().theWorld.markBlockForUpdate(msg.x, msg.y, msg.z);
+		DelayedUpdates.mark(msg.x, msg.y, msg.z);
 	}
 }

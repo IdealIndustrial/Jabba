@@ -13,10 +13,12 @@ import mcp.mobius.betterbarrels.common.JabbaCreativeTab;
 import mcp.mobius.betterbarrels.common.LocalizedChat;
 import mcp.mobius.betterbarrels.common.blocks.TileEntityBarrel;
 import mcp.mobius.betterbarrels.network.BarrelPacketHandler;
+import mcp.mobius.betterbarrels.network.Message0x07ForceRender;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -64,6 +66,7 @@ public class ItemBarrelMover extends Item {
 		classExtensionsNames.add("forestry.apiculture.tiles.TileApiaristChest");
 		classExtensionsNames.add("forestry.arboriculture.tiles.TileArboristChest");
 		classExtensionsNames.add("forestry.lepidopterology.tiles.TileLepidopteristChest");
+		classExtensionsNames.add("forestry.factory.tiles.TileWorktable");
 
 		classExtensionsNames.add("bluedart.tile.TileEntityForceEngine");
 
@@ -273,10 +276,11 @@ public class ItemBarrelMover extends Item {
 		if (TEClassName.contains("forestry.energy.gadgets") && nbtContainer.hasKey("Orientation"))
 			nbtContainer.setInteger("Orientation", 1);
 		
-		/* Forestry chests orientation correction */
+		/* Forestry chests and worktable orientation correction */
 		if ((TEClassName.contains("forestry.apiculture.tiles.TileApiaristChest") 
 				|| TEClassName.contains("forestry.arboriculture.tiles.TileArboristChest")
-				|| TEClassName.contains("forestry.lepidopterology.tiles.TileLepidopteristChest"))
+				|| TEClassName.contains("forestry.lepidopterology.tiles.TileLepidopteristChest")
+				|| TEClassName.contains("forestry.factory.tiles.TileWorktable"))
 				&& nbtContainer.hasKey("Orientation"))
 			nbtContainer.setInteger("Orientation", this.getBarrelOrientationOnPlacement(player).ordinal());
 
@@ -462,7 +466,9 @@ public class ItemBarrelMover extends Item {
 		stack.getTagCompound().removeTag("Container");
 
 		world.markBlockForUpdate(targX, targY, targZ);
-
+		if (TEClassName.contains("forestry.factory.tiles.TileWorktable") && player instanceof EntityPlayerMP){
+			BarrelPacketHandler.INSTANCE.sendTo(new Message0x07ForceRender(x,y,z),(EntityPlayerMP)player);
+		}
 		return true;
 	}
 
